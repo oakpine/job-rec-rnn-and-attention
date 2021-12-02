@@ -65,7 +65,10 @@ class BaseModel(torch.nn.Module):
             elif metric == 'recall':
                 evaluations.append(recall_score(l, p))
             else:
-                k = int(metric.split('@')[-1])
+                try: # only if metric needs k
+                    k = int(metric.split('@')[-1])
+                except:
+                    None
                 df = pd.DataFrame()
                 df['uid'] = data['uid']
                 df['p'] = p
@@ -92,6 +95,11 @@ class BaseModel(torch.nn.Module):
                     for uid, group in df_group:
                         recalls.append(1.0 * np.sum(group['l'][:k]) / np.sum(group['l']))
                     evaluations.append(np.average(recalls))
+                elif metric.startswith('mrr'): # mean reciprocal rank
+                    data = [] # get data in 2d array by user
+                    for uid, group in df_group:
+                        data.append(group['l'].tolist())
+                    evaluations.append(mean_reciprocal_rank(data))
         return evaluations
 
     @staticmethod
