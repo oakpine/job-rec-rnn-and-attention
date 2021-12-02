@@ -13,10 +13,10 @@ from data_loaders.DataLoader import DataLoader
 from models.BaseModel import BaseModel
 from models.RecModel import RecModel
 from models.NCR import NCR
-from models.RNNModel import RNNModel
+# from models.RNNModel import RNNModel
 from models.CompareModel import CompareModel
-from models.STAMP import STAMP
-from models.SVDPP import SVDPP
+# from models.STAMP import STAMP
+# from models.SVDPP import SVDPP
 from models.GRU4Rec import GRU4Rec
 from runners.BaseRunner import BaseRunner
 from data_processor.DataProcessor import DataProcessor
