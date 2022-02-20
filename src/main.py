@@ -22,6 +22,7 @@ from models.NARM import NARM
 from models.GRU import GRU
 from models.LSTM import LSTM
 from models.RNN import RNN
+from models.AbsPosEncoding import AbsPosEncoding
 from runners.BaseRunner import BaseRunner
 from data_processor.DataProcessor import DataProcessor
 from data_processor.ProLogicRecDP import ProLogicRecDP
@@ -60,7 +61,7 @@ def main():
     # choose data_processor
     if init_args.model_name in ['SVDPP']:
         init_args.data_processor = 'HisDataProcessor'
-    elif init_args.model_name in ['NCR', 'RNNModel', 'CompareModel', 'GRU4Rec', 'STAMP', 'NARM', 'GRU', 'LSTM', 'RNN']:
+    elif init_args.model_name in ['NCR', 'RNNModel', 'CompareModel', 'GRU4Rec', 'STAMP', 'NARM', 'GRU', 'LSTM', 'RNN', 'AbsPosEncoding']:
         init_args.data_processor = 'ProLogicRecDP'
     data_processor_name = eval(init_args.data_processor)
 
@@ -146,6 +147,14 @@ def main():
                            user_num=data_loader.user_num, item_num=data_loader.item_num,
                            u_vector_size=args.u_vector_size, i_vector_size=args.i_vector_size,
                            random_seed=args.random_seed, model_path=args.model_path)
+    elif init_args.model_name in ['AbsPosEncoding']:
+        model = model_name(hidden_size=args.hidden_size,
+                           max_his=args.max_his,
+                           label_min=data_loader.label_min, label_max=data_loader.label_max,
+                           feature_num=0,
+                           user_num=data_loader.user_num, item_num=data_loader.item_num,
+                           u_vector_size=args.u_vector_size, i_vector_size=args.i_vector_size,
+                           random_seed=args.random_seed, model_path=args.model_path)
     elif init_args.model_name in ['STAMP']:
         model = model_name(neg_emb=args.neg_emb, neg_layer=args.neg_layer, hidden_size=args.hidden_size,
                            num_layers=args.num_layers, p_layers=args.p_layers,
@@ -187,7 +196,7 @@ def main():
         model = model.cuda()
 
     # append user interaction history
-    if init_args.model_name in ['NCR', 'RNNModel', 'CompareModel', 'GRU4Rec', 'STAMP', 'NARM', 'GRU', 'LSTM', 'RNN']:
+    if init_args.model_name in ['NCR', 'RNNModel', 'CompareModel', 'GRU4Rec', 'STAMP', 'NARM', 'GRU', 'LSTM', 'RNN', 'AbsPosEncoding']:
         data_loader.append_his(last_n=args.max_his, supply=False, neg=True, neg_column=False)
 
     # if ranking, only keeps observed interactions, negative items are sampled during training process.
