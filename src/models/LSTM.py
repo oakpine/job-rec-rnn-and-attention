@@ -4,7 +4,6 @@ from models.RecModel import RecModel
 from utils.global_p import *
 
 class LSTM(RecModel):
-    # TODO: not sure if these options are right
     append_id = True
     include_id = False
     include_user_features = False
@@ -34,7 +33,6 @@ class LSTM(RecModel):
             num_layers=self.num_layers)
         self.out = torch.nn.Linear(self.hidden_size, self.ui_vector_size, bias=False)
 
-    # TODO: can I assume the rest of the code takes care of making neg samples?
     def predict(self, feed_dict):
         check_list = []
         i_ids = feed_dict['X'][:, 1]
@@ -42,16 +40,8 @@ class LSTM(RecModel):
 
         his_vectors = self.iid_embeddings(history)
 
-        # print(his_vectors.size())
         output, (hidden, cell) = self.rnn(his_vectors, None)
-        # print(output.size())
-        # print(hidden.size())
-        # print('hidden[-1]')
-        # print(hidden[-1].size())
-        #assert torch.equal(output[:, -1, :], hidden[-1])
         output = self.out(hidden[-1])  
-        # print(output.size())
-        # print("\nnew")
 
         i_vectors = self.iid_embeddings(i_ids)
 

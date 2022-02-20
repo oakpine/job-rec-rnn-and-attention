@@ -4,7 +4,6 @@ from models.RecModel import RecModel
 from utils.global_p import *
 
 class RNN(RecModel):
-    # TODO: not sure if these options are right
     append_id = True
     include_id = False
     include_user_features = False
@@ -41,15 +40,8 @@ class RNN(RecModel):
 
         his_vectors = self.iid_embeddings(history)
 
-        # print(his_vectors.size())
         output, hidden = self.rnn(his_vectors, None)
-        # print(output.size())
-        # print(hidden.size())
-        # print('hidden[-1]')
-        # print(hidden[-1].size())
         output = self.out(hidden[-1])  # B * V
-        # print(output.size())
-        # print("\nnew")
 
         i_vectors = self.iid_embeddings(i_ids)
 
